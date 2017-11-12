@@ -1,0 +1,35 @@
+from threading import Thread
+import pyaudio
+
+CHUNK = 1024
+WIDTH = 2
+CHANNELS = 2
+RATE = 44100
+RECORD_SECONDS = 0.05
+
+
+p = pyaudio.PyAudio()
+
+stream = p.open(format=p.get_format_from_width(WIDTH),
+                channels=CHANNELS,
+                rate=RATE,
+                input=True,
+                output=True,
+                frames_per_buffer=CHUNK)
+
+
+
+
+while True:
+	print("* recording")
+
+	for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+	    data = stream.read(CHUNK)  #read audio stream
+	    stream.write(data, CHUNK)  #play back audio stream
+
+print("* done")
+
+stream.stop_stream()
+stream.close()
+
+p.terminate()
